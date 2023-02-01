@@ -99,6 +99,7 @@ void            xMBUtilSetBits( UCHAR * ucByteBuf, USHORT usBitOffset,
 UCHAR           xMBUtilGetBits( UCHAR * ucByteBuf, USHORT usBitOffset,
                                 UCHAR ucNBits );
 
+eMBException prveMBError2Exception( eMBErrorCode eErrorCode );
 /*! @} */
 
 #ifdef __cplusplus

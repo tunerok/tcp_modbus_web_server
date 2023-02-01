@@ -4,36 +4,39 @@
 ModbusTCPHandler::ModbusTCPHandler()
 {
 
-    //xMBHandle    xMBMMaster;
-
 #ifdef MODBUS_MASTER
     vMBPOtherDLLClose();
     vMBPOtherDLLInit();
-    eMBMTCPInit( &this->xMBMMaster );
-//    eMBMTCPConnect( this->xMBMMaster, "127.0.0.1", 502 );
+    if (eMBMTCPInit( &this->xMBMMaster )){
+        qDebug() << "TCP mbMaster init error";
+    }
+
 #endif
 
 #ifdef MODBUS_SLAVE
     if( eMBTCPInit( MB_TCP_PORT_USE_DEFAULT ) != MB_ENOERR )
     {
-        _ftprintf( stderr, _T( "%s: can't initialize modbus stack!\r\n" ), PROG );
-        iExitCode = EXIT_FAILURE;
+        qDebug() << "TCP mbSlave init error";
     }
-    InitializeCriticalSection( &hPollLock );
-    eSetPollingThreadState( STOPPED );
-    bCreatePollingThread(  );
 
 #endif
 
 }
 
 ModbusTCPHandler::~ModbusTCPHandler(){
+#ifdef MODBUS_MASTER
     eMBMClose( this->xMBMMaster );
     vMBPOtherDLLClose();
+#endif
+
+#ifdef MODBUS_SLAVE
+    ( void )eMBClose(  );
+#endif
 }
 
 void ModbusTCPHandler::run(){
-    qDebug() << "runned";
+#ifdef MODBUS_MASTER
+    qDebug() << "Master thread runned";
     int i = 0;
     eMBErrorCode eStatus, eStatus2;
     eStatus = MB_EIO;
@@ -60,57 +63,20 @@ void ModbusTCPHandler::run(){
         QThread::sleep(1);
         qDebug() << "poll cycle: " << eStatus;
     }
-//    }
-//    else{
-//        vMBPOtherDLLInit();
-//        eMBMTCPInit( &xMBMMaster );
-//        eMBMTCPConnect( xMBMMaster, CLIENT_HOSTNAME, CLIENT_PORT );
-//    }
+#endif
 
+#ifdef MODBUS_SLAVE
+    if( eMBEnable(  ) == MB_ENOERR )
+    {
+        do
+        {
+            if( eMBPoll(  ) != MB_ENOERR )
+                break;
+        }
+        while(1);
+    }
 
-//    eMBErrorCode eStatus, eStatus2;
-//    xMBHandle    xMBMMaster;
-//    USHORT       usNRegs[5];
-//    USHORT       usRegCnt = 0;
-//    UBYTE        ubIdx;
-//    int          iPolls = 100;
+    ( void )eMBDisable(  );
 
-//    vMBPOtherDLLInit();
-
-//    if( MB_ENOERR == ( eStatus = eMBMTCPInit( &xMBMMaster ) ) )
-//    {
-//        eStatus = MB_EIO;
-//        while( iPolls-- > 0 )
-//        {
-//            if( MB_ENOERR != eStatus )
-//            {
-//                /* First disconnect - Function is safe even when not connected. */
-//                ( void )eMBMTCPDisconnect( xMBMMaster );
-//                eStatus = eMBMTCPConnect( xMBMMaster, "127.0.0.1", 502 );
-//            }
-//            if( MB_ENOERR == eStatus )
-//            {
-//                    if( MB_ENOERR != ( eStatus2 = eMBMWriteSingleRegister( xMBMMaster, 1, 2005, 55 ) ) )
-//                    {
-//                        eStatus = eStatus2;
-//                    }
-//            }
-//            _ftprintf( stderr, _T( "poll cycle: %s\n" ), eStatus == MB_ENOERR ? _T( "okay" ) : _T( "failed" ) );
-//        }
-//    }
-//    else
-//    {
-//        _ftprintf( stderr, _T( "TCP init failed with error = %d\n" ), eStatus );
-//    }
-//    if( MB_ENOERR != ( eStatus = eMBMClose( xMBMMaster ) ) )
-//    {
-//        MBP_ASSERT( 0 );
-//    }
-
-//    vMBPOtherDLLClose();
-
-
-
-
-
+#endif
 }

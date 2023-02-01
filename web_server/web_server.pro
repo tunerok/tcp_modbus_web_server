@@ -2,13 +2,13 @@ QT -= gui
 QT += network
 
 CONFIG += c++11 console
-#CONFIG -= app_bundle
+CONFIG -= app_bundle
 
 LIBS += -lws2_32
 
 
 #can be defined as MODBUS_MASTER or MODBUS_SLAVE
-DEFINES += MODBUS_MASTER
+DEFINES += MODBUS_SLAVE
 
 include(QtWebApp/QtWebApp/httpserver/httpserver.pri)
 
@@ -96,7 +96,6 @@ contains(DEFINES,MODBUS_SLAVE){
     INCLUDEPATH += $$PWD/modbusTCP/mbslave/port
 
     SOURCES +=\
-        modbusTCP/mbslave/modbus/ascii/mbascii.c \
         modbusTCP/mbslave/modbus/functions/mbfunccoils.c \
         modbusTCP/mbslave/modbus/functions/mbfuncdiag.c \
         modbusTCP/mbslave/modbus/functions/mbfuncdisc.c \
@@ -105,8 +104,6 @@ contains(DEFINES,MODBUS_SLAVE){
         modbusTCP/mbslave/modbus/functions/mbfuncother.c \
         modbusTCP/mbslave/modbus/functions/mbutils.c \
         modbusTCP/mbslave/modbus/mb.c \
-        modbusTCP/mbslave/modbus/rtu/mbcrc.c \
-        modbusTCP/mbslave/modbus/rtu/mbrtu.c \
         modbusTCP/mbslave/modbus/tcp/mbtcp.c \
         modbusTCP/mbslave/port/portevent.c \
         modbusTCP/mbslave/port/portother.c \
@@ -114,7 +111,6 @@ contains(DEFINES,MODBUS_SLAVE){
         modbusTCP/mbslave/port/stdafx.cpp
 
     HEADERS += \
-        modbusTCP/mbslave/modbus/ascii/mbascii.h \
         modbusTCP/mbslave/modbus/include/mb.h \
         modbusTCP/mbslave/modbus/include/mbconfig.h \
         modbusTCP/mbslave/modbus/include/mbframe.h \
@@ -122,8 +118,6 @@ contains(DEFINES,MODBUS_SLAVE){
         modbusTCP/mbslave/modbus/include/mbport.h \
         modbusTCP/mbslave/modbus/include/mbproto.h \
         modbusTCP/mbslave/modbus/include/mbutils.h \
-        modbusTCP/mbslave/modbus/rtu/mbcrc.h \
-        modbusTCP/mbslave/modbus/rtu/mbrtu.h \
         modbusTCP/mbslave/modbus/tcp/mbtcp.h \
         modbusTCP/mbslave/port/port.h \
         modbusTCP/mbslave/port/stdafx.h
@@ -133,9 +127,9 @@ contains(DEFINES,MODBUS_SLAVE){
 OTHER_FILES += etc/webapp1.ini
 OTHER_FILES += etc/index/index_master.html
 # Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
+#qnx: target.path = /tmp/$${TARGET}/bin
+#else: unix:!android: target.path = /opt/$${TARGET}/bin
+#!isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
     global.h \

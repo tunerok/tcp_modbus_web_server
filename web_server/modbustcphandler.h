@@ -24,28 +24,27 @@
 class ModbusTCPHandler : public QThread
 {
 private:
-
-public:
+#ifdef MODBUS_MASTER
     xMBHandle    xMBMMaster;
+#endif
+public:
     ModbusTCPHandler( );
     ~ModbusTCPHandler();
-
-#ifdef MODBUS_MASTER
     void run() override;
 
-#endif
 
-#ifdef MODBUS_SLAVE
-    BOOL bCreatePollingThread( void );
-    DWORD WINAPI dwPollingThread( LPVOID lpParameter );
-    enum ThreadState eGetPollingThreadState(  );
-    void eSetPollingThreadState( enum ThreadState eNewState );
+//#ifdef MODBUS_SLAVE
+//    void run() override;
+//    BOOL bCreatePollingThread( void );
+//    DWORD WINAPI dwPollingThread( LPVOID lpParameter );
+//    enum ThreadState eGetPollingThreadState(  );
+//    void eSetPollingThreadState( enum ThreadState eNewState );
 
-    eMBErrorCode eMBRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs );
-    eMBErrorCode eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegisterMode eMode );
-    eMBErrorCode eMBRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eMBRegisterMode eMode );
-    eMBErrorCode eMBRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete );
-#endif
+//    eMBErrorCode eMBRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs );
+//    eMBErrorCode eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegisterMode eMode );
+//    eMBErrorCode eMBRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eMBRegisterMode eMode );
+//    eMBErrorCode eMBRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete );
+//#endif
 };
 
 #endif // MODBUSTCPHANDLER_H

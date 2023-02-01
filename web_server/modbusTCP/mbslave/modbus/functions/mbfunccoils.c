@@ -39,6 +39,7 @@
 #include "mbframe.h"
 #include "mbproto.h"
 #include "mbconfig.h"
+#include "mbutils.h"
 
 /* ----------------------- Defines ------------------------------------------*/
 #define MB_PDU_FUNC_READ_ADDR_OFF           ( MB_PDU_DATA_OFF )
@@ -58,7 +59,7 @@
 #define MB_PDU_FUNC_WRITE_MUL_COILCNT_MAX   ( 0x07B0 )
 
 /* ----------------------- Static functions ---------------------------------*/
-eMBException    prveMBError2Exception( eMBErrorCode eErrorCode );
+//extern eMBException    prveMBError2Exception( eMBErrorCode eErrorCode );
 
 /* ----------------------- Start implementation -----------------------------*/
 
