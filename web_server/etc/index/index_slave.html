@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+</head>
+<body>
+
+<div>
+  <h2>html2</h2>
+  <p id="demo"></p>
+  <fieldset >
+    <legend>Slave:</legend>
+    <p>To Master Data input</p>
+    <input id="m_inp_to_send" type="text" size="40">
+    <div>
+      <input type="checkbox" id="m_color" name="m_color" onclick="change()" checked >
+      <label for="m_color">Master Output color</label>
+    </div>
+        <p>From Master Incomming Data<Br>
+    <textarea readonly style="resize: none; color: red;" name="m_msg" cols="40" rows="3">ggg</textarea></p>
+    <div style="height:50px">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle id="m_icon" cx="2" cy="2" r="1.5" style="fill:green" />
+      </svg>
+    </div>
+    
+    
+  </fieldset>
+
+
+  <script type="text/javascript">
+$( document ).ready(function() {
+var wage = document.getElementById("s1_inp_to_send");
+wage.addEventListener("keydown", function (e) {
+    if (e.code === "Enter") {  //checks whether the pressed key is "Enter"
+        loadDoc();
+    }
+});
+});
+
+
+
+    setInterval(loadDoc, 2000);
+function loadDoc() {
+  const xhttp = new XMLHttpRequest();
+  xhttp.onload = function() {
+    document.getElementById("demo").innerHTML =
+    this.responseText;
+    }
+    xhttp.open("GET", "/ajax_info");
+    xhttp.send();
+}
+function change() {
+    var decider = document.getElementById('s1_color');
+    if(decider.checked){
+        loadDoc();
+    } else {
+      loadDoc();
+    }
+}
+  </script>
+
+</body>
+</html>

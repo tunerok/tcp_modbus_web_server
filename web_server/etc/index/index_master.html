@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+</head>
+<body>
+
+<div>
+  <h2>html2</h2>
+  <p id="demo"></p>
+  <fieldset>
+    <legend>First Slave:</legend>
+    <p>First Slave Data input</p>
+    <input id="s1_inp_to_send" type="text" size="40">
+    <div>
+      <input type="checkbox" id="s1_color" name="s1_color" onclick="Send_inp_data(1)" checked >
+      <label for="s1_color">First Slave Output color</label>
+    </div>
+    <p>First Slave Incomming Data<Br>
+    <textarea readonly style="resize: none; color: red;" id="s1_msg" cols="40" rows="3">sss</textarea></p>
+    <div style="height:50px">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle id="m_icon" cx="2" cy="2" r="1.5" style="fill:green" />
+      </svg>
+    </div>
+    <button type="button" onclick="Set_icon(1, 1)" onmouseup="Set_icon(1, 0)">First Slave On</button>
+    
+  </fieldset>
+    <fieldset>
+    <legend>Second Slave:</legend>
+    <p>Second Slave Data input</p>
+    <input id="s2_inp_to_send" type="text" size="40">
+    <div>
+      <input type="checkbox" id="s2_color" name="s2_color" onclick="Send_inp_data(2)">
+      <label for="s2_color">Second Slave Output color</label>
+    </div>
+    <p>Second Slave Incomming Data<Br>
+    <textarea readonly style="resize: none; color: red;" id="s2_msg" cols="40" rows="3">eee</textarea></p>
+    <div style="height:50px">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <circle id="m_icon" cx="2" cy="2" r="1.5" style="fill:green" />
+      </svg>
+    </div>
+    <button type="button" onclick="Set_icon(2, 1)" onmouseup="Set_icon(2, 0)">Second Slave On</button>
+    
+  </fieldset>
+
+</div>
+
+  <script type="text/javascript">
+$( document ).ready(function() {
+  var s1_inp = document.getElementById("s1_inp_to_send");
+  s1_inp.addEventListener("keydown", function (e) {
+      if (e.code === "Enter") {  //checks whether the pressed key is "Enter"
+          Send_inp_data(1);
+      }
+  });
+  var s2_inp = document.getElementById("s2_inp_to_send");
+  s2_inp.addEventListener("keydown", function (e) {
+      if (e.code === "Enter") {  //checks whether the pressed key is "Enter"
+          Send_inp_data(2);
+      }
+  });
+});
+
+
+function Send_inp_data(snumber){
+  var obj = new Object();
+  obj.request_type = 1;
+  obj.slave_number = snumber;
+  if (snumber == 1){
+    obj.slave_data = document.getElementById("s1_inp_to_send").value;
+  }else{
+    obj.slave_data = document.getElementById("s2_inp_to_send").value;
+  }
+  Send_post_data(obj);
+}
+
+
+function Set_out_color(snumber){
+  var obj = new Object();
+  obj.request_type = 2;
+  obj.slave_number = snumber;       
+  if (snumber == 1){
+    obj.slave_data = document.getElementById("s1_color").checked;
+  }else{
+    obj.slave_data = document.getElementById("s2_color").checked;
+  }
+  Send_post_data(obj);
+}
+
+function Set_icon(snumber, btn_state){
+    var obj = new Object();
+    obj.request_type = 3;
+    obj.slave_number = snumber;
+    obj.slave_data = btn_state;
+    Send_post_data(obj);
+}
+
+function Send_post_data(data){
+  const xhttp = new XMLHttpRequest();
+  xhttp.open("POST", "/parse_inc_data", false); 
+  xhttp.send(JSON.stringify(obj));
+}
+
+
+setInterval(loadDoc, 2000);
+function loadDoc() {
+  const xhttp = new XMLHttpRequest();
+  xhttp.onload = function() {
+    document.getElementById("s2_msg").innerHTML = this.responseText;
+    //JSON.parse(this.responseText);
+    }
+    xhttp.open("GET", "/parse_inc_data");
+    xhttp.send();
+}
+
+// function loadDoc() {
+//   const xhttp = new XMLHttpRequest();
+//   xhttp.onload = function() {
+//     document.getElementById("demo").innerHTML =
+//     this.responseText;
+//     }
+//     xhttp.open("GET", "/ajax_info");
+//     xhttp.send();
+// }
+
+
+function change() {
+    var decider = document.getElementById('s1_color');
+    if(decider.checked){
+        loadDoc();
+    } else {
+      loadDoc();
+    }
+}
+  </script>
+
+</body>
+</html>
