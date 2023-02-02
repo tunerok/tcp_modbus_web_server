@@ -2,6 +2,7 @@
 #define WEBREQUESTCONTROLLER_H
 
 #include "httprequesthandler.h"
+#include "modbustcphandler.h"
 #include <QJsonDocument>
 #include <QJsonParseError>
 #include <QJsonObject>
@@ -13,6 +14,7 @@ using namespace stefanfrings;
 class WebRequestController : public HttpRequestHandler
 {
     int counter_data;
+    ModbusTCPHandler _sdmodbus;
 public:
     WebRequestController(QObject* parent=0);
     void service(HttpRequest& request, HttpResponse& response);

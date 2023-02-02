@@ -1,23 +1,172 @@
 <!DOCTYPE html>
 <html>
+<head>
+<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+</head>
 <body>
 
-<div id="demo">
-  
+<div>
+  <h2>html2</h2>
+  <p id="demo"></p>
+  <fieldset>
+    <legend>First Slave:</legend>
+    <p>First Slave Data input</p>
+    <input id="s1_inp_to_send" type="text" size="40">
+    <div>
+      <input type="checkbox" id="s1_color" name="s1_color" onclick="Set_out_color(1)" checked >
+      <label for="s1_color">First Slave Output color</label>
+    </div>
+    <p>First Slave Incomming Data<Br>
+    <textarea readonly style="height:150px; width:70%; resize: none; color: blue;" id="s1_msg" cols="40" rows="3">sss</textarea></p>
+    <div style="height:50px">
+        <div id="s1_icon">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle  cx="2" cy="2" r="1.5" style="fill:green" />
+          </svg>
+      </div>
+    </div>
+    <button type="button" onmousedown="Set_icon(1, 1)" onmouseup="Set_icon(1, 0)">First Slave On</button>
+    
+  </fieldset>
+    <fieldset>
+    <legend>Second Slave:</legend>
+    <p>Second Slave Data input</p>
+    <input id="s2_inp_to_send" type="text" size="40">
+    <div>
+      <input type="checkbox" id="s2_color" name="s2_color" onclick="Set_out_color(2)">
+      <label for="s2_color">Second Slave Output color</label>
+    </div>
+    <p>Second Slave Incomming Data<Br>
+    <textarea readonly style="height:150px; width:70%; resize: none; color: blue;" id="s2_msg" cols="40" rows="3">eee</textarea></p>
+    <div style="height:50px">
+        <div id="s2_icon">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle  cx="2" cy="2" r="1.5" style="fill:yellow" />
+          </svg>
+      </div>
+    </div>
+    <button type="button" onmousedown="Set_icon(2, 1)" onmouseup="Set_icon(2, 0)">Second Slave On</button>
+    
+  </fieldset>
+
 </div>
 
-<script>
-  setInterval(loadDoc, 2000);
-  function loadDoc() {
+  <script type="text/javascript">
+$( document ).ready(function() {
+  var s1_inp = document.getElementById("s1_inp_to_send");
+  s1_inp.addEventListener("keydown", function (e) {
+      if (e.code === "Enter") {  //checks whether the pressed key is "Enter"
+          Send_inp_data(1);
+      }
+  });
+  var s2_inp = document.getElementById("s2_inp_to_send");
+  s2_inp.addEventListener("keydown", function (e) {
+      if (e.code === "Enter") {  //checks whether the pressed key is "Enter"
+          Send_inp_data(2);
+      }
+  });
+});
+
+
+function Send_inp_data(snumber){
+  var obj = new Object();
+  obj.request_type = 1;
+  obj.slave_number = snumber;
+  if (snumber == 1){
+    obj.slave_data = document.getElementById("s1_inp_to_send").value;
+  }else{
+    obj.slave_data = document.getElementById("s2_inp_to_send").value;
+  }
+  Send_post_data(obj);
+}
+
+
+function Set_out_color(snumber){
+  var obj = new Object();
+  obj.request_type = 2;
+  obj.slave_number = snumber;       
+  if (snumber == 1){
+    if (document.getElementById("s1_color").checked){
+        obj.slave_data = 1;
+    }
+    else{
+        obj.slave_data = 0;
+    }
+  }else{
+      if (document.getElementById("s2_color").checked){
+          obj.slave_data = 1;
+      }
+      else{
+          obj.slave_data = 0;
+      }
+  }
+  Send_post_data(obj);
+}
+
+function Set_icon(snumber, btn_state){
+    var obj = new Object();
+    obj.request_type = 3;
+    obj.slave_number = snumber;
+    obj.slave_data = btn_state;
+    Send_post_data(obj);
+}
+
+function Send_post_data(data){
+  const xhttp = new XMLHttpRequest();
+  xhttp.open("POST", "/parse_inc_data", false); 
+  xhttp.send(JSON.stringify(data));
+}
+
+
+function handle_data(obj){
+    var currentdate = new Date();
+    if (obj != undefined){
+    if (obj.s1_icon_show_data != undefined)
+        document.getElementById("s1_icon").hidden = !obj.s1_icon_show_data;
+    if (obj.s2_icon_show_data != undefined)
+        document.getElementById("s2_icon").hidden = !obj.s2_icon_show_data;
+    if (obj.s1_msg_data != undefined)
+        document.getElementById("s1_msg").value += currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds() + ">> " + obj.s1_msg_data + '\r\n';
+    if (obj.s2_msg_data != undefined)
+        document.getElementById("s2_msg").value += obj.s2_msg_data + '\r\n';
+    }
+}
+
+setInterval(loadDoc, 2000);
+function loadDoc() {
   const xhttp = new XMLHttpRequest();
   xhttp.onload = function() {
-    document.getElementById("demo").innerHTML =
-    this.responseText;
-  }
-  xhttp.open("GET", "/ajax_info");
-  xhttp.send();
+    document.getElementById("s2_msg").innerHTML = this.responseText;
+
+    var obj = JSON.parse(this.responseText);
+    console.log(obj);
+    handle_data(obj);
+
+    }
+    xhttp.open("GET", "/parse_inc_data");
+    xhttp.send();
 }
-</script>
+
+// function loadDoc() {
+//   const xhttp = new XMLHttpRequest();
+//   xhttp.onload = function() {
+//     document.getElementById("demo").innerHTML =
+//     this.responseText;
+//     }
+//     xhttp.open("GET", "/ajax_info");
+//     xhttp.send();
+// }
+
+
+function change() {
+    var decider = document.getElementById('s1_color');
+    if(decider.checked){
+        loadDoc();
+    } else {
+      loadDoc();
+    }
+}
+  </script>
 
 </body>
 </html>

@@ -13,7 +13,8 @@
 PR_BEGIN_EXTERN_C
 #endif
 /* ----------------------- Defines ------------------------------------------*/
-
+#include "common/mbtypes.h"
+#include "common/mbframe.h"
 /*!
  * \if INTERNAL_DOCS
  * \addtogroup mb_cmn_int

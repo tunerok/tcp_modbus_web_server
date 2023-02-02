@@ -18,15 +18,19 @@
 
 
 #ifdef MODBUS_SLAVE
-//#include "stdafx.h"
 
-///* ----------------------- Modbus includes ----------------------------------*/
-//#include "mb.h"
-//#include "mbport.h"
 #define REG_INPUT_START 1000
-#define REG_INPUT_NREGS 130
+#define REG_INPUT_IS_MASTER_ICON_SHOW_ADDR 1001
+#define REG_INPUT_SLAVE_DATA_START 1002
+#define REG_INPUT_NREGS 132
+
 #define REG_HOLDING_START 2000
-#define REG_HOLDING_NREGS 130
+#define REG_HOLDING_IS_SLAVE_INPUT_NEW_ADDR 2001
+#define REG_HOLDING_IS_MASTER_DATA_NEW_ADDR 2002
+#define REG_HOLDING_IS_SLAVE_COLOR_CHANGE_ADDR 2003
+#define REG_HOLDING_IS_SLAVE_ICON_SHOW_ADDR 2004
+#define REG_HOLDING_MASTER_DATA_START 2005
+#define REG_HOLDING_NREGS 135
 
 /* ----------------------- Static variables ---------------------------------*/
 static USHORT   usRegInputStart = REG_INPUT_START;
@@ -156,6 +160,8 @@ QString searchConfigFile() {
 
 using namespace stefanfrings;
 
+
+
 int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
@@ -171,9 +177,7 @@ int main(int argc, char *argv[])
     fileSettings->beginGroup("files");
     staticFileController=new StaticFileController(fileSettings,&app);
 
-    ModbusTCPHandler sdmodbus;
 
-    sdmodbus.start();
 
 //    QTimer *timer = new QTimer();
 //    QObject::connect(timer, SIGNAL(timeout()), this, SLOT(modbus->dataSync();));

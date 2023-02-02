@@ -2,6 +2,9 @@
 #define MODBUSTCPHANDLER_H
 
 #include <QThread>
+#include "modbusdatacontroller.h"
+#include "modbustcpaddresses.h"
+
 
 #ifdef MODBUS_MASTER
     /* ----------------------- Platform includes --------------------------------*/
@@ -30,6 +33,7 @@ private:
 public:
     ModbusTCPHandler( );
     ~ModbusTCPHandler();
+//    ModbusDataController DataController;
     void run() override;
 
 

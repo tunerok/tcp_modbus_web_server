@@ -13,7 +13,7 @@
 
 /* ----------------------- Platform includes --------------------------------*/
 #include "mbport.h"
-
+#include "common/mbutils.h"
 /* ----------------------- Modbus includes ----------------------------------*/
 #include "mbm.h"
 #include "common/mbframe.h"
