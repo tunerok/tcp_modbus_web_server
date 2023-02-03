@@ -1,8 +1,11 @@
 QT -= gui
+
 QT += network
+
 
 CONFIG += c++11 console
 CONFIG -= app_bundle
+
 
 LIBS += -lws2_32
 
@@ -30,6 +33,7 @@ SOURCES += \
         listdatacontroller.cpp \
         main.cpp \
         modbusdatacontroller.cpp \
+        modbusretargetslave.cpp \
         modbustcphandler.cpp \
         requestmapper.cpp \
         webrequestcontroller.cpp
@@ -101,6 +105,7 @@ contains(DEFINES,MODBUS_SLAVE){
     INCLUDEPATH += $$PWD/modbusTCP/mbslave/port
 
     HEADERS += \
+        modbusTCP/mbslave/port/port.h \
         modbusTCP/mbslave/modbus/include/mb.h \
         modbusTCP/mbslave/modbus/include/mbconfig.h \
         modbusTCP/mbslave/modbus/include/mbframe.h \
@@ -109,17 +114,16 @@ contains(DEFINES,MODBUS_SLAVE){
         modbusTCP/mbslave/modbus/include/mbproto.h \
         modbusTCP/mbslave/modbus/include/mbutils.h \
         modbusTCP/mbslave/modbus/tcp/mbtcp.h \
-        modbusTCP/mbslave/port/port.h \
         modbusTCP/mbslave/port/stdafx.h
 
     SOURCES +=\
+        modbusTCP/mbslave/modbus/functions/mbutils.c \
         modbusTCP/mbslave/modbus/functions/mbfunccoils.c \
         modbusTCP/mbslave/modbus/functions/mbfuncdiag.c \
         modbusTCP/mbslave/modbus/functions/mbfuncdisc.c \
         modbusTCP/mbslave/modbus/functions/mbfuncholding.c \
         modbusTCP/mbslave/modbus/functions/mbfuncinput.c \
         modbusTCP/mbslave/modbus/functions/mbfuncother.c \
-        modbusTCP/mbslave/modbus/functions/mbutils.c \
         modbusTCP/mbslave/modbus/mb.c \
         modbusTCP/mbslave/modbus/tcp/mbtcp.c \
         modbusTCP/mbslave/port/portevent.c \

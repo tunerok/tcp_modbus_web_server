@@ -7,6 +7,9 @@
 
 
 #ifdef MODBUS_MASTER
+
+    #define MODBUS_RETRY_CONNECT_CNTR 2
+
     /* ----------------------- Platform includes --------------------------------*/
     #include "mbport.h"
 
@@ -29,6 +32,7 @@ class ModbusTCPHandler : public QThread
 private:
 #ifdef MODBUS_MASTER
     xMBHandle    xMBMMaster;
+    int _is_first_run;
 #endif
 public:
     ModbusTCPHandler( );

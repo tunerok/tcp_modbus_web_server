@@ -40,6 +40,8 @@
 #include "mbproto.h"
 #include "mbconfig.h"
 
+#include "mbutils.h"
+
 /* ----------------------- Defines ------------------------------------------*/
 #define MB_PDU_FUNC_READ_ADDR_OFF               ( MB_PDU_DATA_OFF + 0)
 #define MB_PDU_FUNC_READ_REGCNT_OFF             ( MB_PDU_DATA_OFF + 2 )

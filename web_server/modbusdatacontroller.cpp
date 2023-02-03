@@ -2,9 +2,69 @@
 
 ModbusDataController::ModbusDataController()
 {
+
+#ifdef MODBUS_SLAVE
+    memset(this->_usRegHoldingBuf, 0, (REG_STRING_MAX_LEN-1)*2);
+    memset(this->_usRegInputBuf, 0, (REG_STRING_MAX_LEN-1)*2);
+#endif
+#ifdef MODBUS_MASTER
     std::memset(this->_localdata, 0, 5);
+#endif
+
 }
 
+#ifdef MODBUS_SLAVE
+unsigned short ModbusDataController::getInputBuf(int iRegIndex){
+    unsigned short tmp = 0;
+    _mutex.lock();
+    tmp = this->_usRegInputBuf[iRegIndex];
+    _mutex.unlock();
+    return tmp;
+}
+
+void ModbusDataController::setInputBuf(int iRegIndex, unsigned short Data){
+    _mutex.lock();
+    this->_usRegInputBuf[iRegIndex] = Data;
+    _mutex.unlock();
+}
+
+unsigned short ModbusDataController::getHoldingBuf(int iRegIndex){
+    unsigned short tmp = 0;
+    _mutex.lock();
+    tmp = this->_usRegHoldingBuf[iRegIndex];
+    _mutex.unlock();
+    return tmp;
+}
+
+void ModbusDataController::setHoldingBuf(int iRegIndex, unsigned short Data){
+    _mutex.lock();
+    this->_usRegHoldingBuf[iRegIndex] = Data;
+    _mutex.unlock();
+}
+
+
+void ModbusDataController::getMasterMsg(QByteArray *msg){
+    _mutex.lock();
+//    std::string str( (char*)&this->_usRegHoldingBuf[REG_HOLDING_MASTER_DATA_START-REG_HOLDING_START], (REG_STRING_MAX_LEN-10)*2);
+//    QString qstr = QString::fromStdString(str);
+    QByteArray tmp = QByteArray(reinterpret_cast<char*>(&this->_usRegHoldingBuf[REG_HOLDING_MASTER_DATA_START-REG_HOLDING_START+1]), REG_STRING_MAX_LEN-10);
+    msg->append(tmp);
+    _mutex.unlock();
+}
+
+
+void ModbusDataController::setSlaveMsg(QByteArray msg){
+//    const std::size_t count = msg.size();
+    _mutex.lock();
+    memset(&this->_usRegInputBuf[REG_INPUT_SLAVE_DATA_START-REG_INPUT_START], 0, (REG_STRING_MAX_LEN-1)*2);
+//    unsigned char* hex =new unsigned char[(REG_STRING_MAX_LEN-10)*2];
+    std::memcpy((char*)&this->_usRegInputBuf[REG_INPUT_SLAVE_DATA_START-REG_INPUT_START], msg.constData(), msg.length());
+    _mutex.unlock();
+}
+#endif
+
+
+#ifdef MODBUS_MASTER
 void ModbusDataController::updateInputStatus(unsigned short *Data, int slave){
     _mutex.lock();
     std::memcpy(this->_data[slave], Data, 5);
@@ -117,3 +177,4 @@ bool ModbusDataController::bufSlaveAvailable(int slave){
         return 0;
     return 1;
 }
+#endif

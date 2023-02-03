@@ -5,7 +5,7 @@ WebRequestController::WebRequestController(QObject* parent): HttpRequestHandler(
     counter_data = 0;
     this->_sdmodbus.start();
 }
-
+#ifdef MODBUS_MASTER
 void WebRequestController::service(HttpRequest &request, HttpResponse &response) {
     ModbusDataController& DataController = ModbusDataController::getInstance();
     if (request.getMethod() == "POST")
@@ -14,7 +14,7 @@ void WebRequestController::service(HttpRequest &request, HttpResponse &response)
         QJsonObject jsonObject = jsonResponse.object();
 
         int request_type = jsonObject["request_type"].toInt();
-        int slave_number = jsonObject["slave_number"].toInt();
+        int slave_number = jsonObject["slave_number"].toInt() - 1;
 
         switch (request_type) {
         case 1:
@@ -22,7 +22,7 @@ void WebRequestController::service(HttpRequest &request, HttpResponse &response)
             //send string via modbus
             QByteArray data = jsonObject["slave_data"].toString().toUtf8();
             DataController.putMasterStringData(data, slave_number);
-            DataController.setLocalDiscrete(REG_HOLDING_IS_SLAVE_INPUT_NEW_ADDR, slave_number);
+            //DataController.setLocalDiscrete(REG_HOLDING_IS_MASTER_DATA_NEW_ADDR, slave_number);
             break;
         }
         case 2:{
@@ -104,3 +104,59 @@ void WebRequestController::service(HttpRequest &request, HttpResponse &response)
 
     //response.write("Hello World",true);
 }
+#endif
+
+
+#ifdef MODBUS_SLAVE
+void WebRequestController::service(HttpRequest &request, HttpResponse &response) {
+    ModbusDataController& DataController = ModbusDataController::getInstance();
+    if (request.getMethod() == "POST")
+    {
+        QJsonDocument jsonResponse = QJsonDocument::fromJson(request.getBody());
+        QJsonObject jsonObject = jsonResponse.object();
+
+        int request_type = jsonObject["request_type"].toInt();
+        switch (request_type) {
+        case 1:
+        {
+            //send string via modbus
+            QByteArray data = jsonObject["slave_data"].toString().toUtf8();
+            DataController.setSlaveMsg(data);
+            DataController.setHoldingBuf(REG_HOLDING_IS_SLAVE_INPUT_NEW_ADDR - REG_HOLDING_START, 1);
+            break;
+        }
+        case 2:{
+        {
+            //change color
+            int slave_color = jsonObject["slave_data"].toInt();
+            DataController.setInputBuf(REG_INPUT_IS_MASTER_ICON_SHOW_ADDR - REG_INPUT_START, slave_color);
+            break;
+            }
+        }
+        default:
+            break;
+        }
+    }else if (request.getMethod() == "GET") {
+
+        QJsonObject object;
+
+        object.insert("s_icon_show_data", DataController.getHoldingBuf(REG_HOLDING_IS_SLAVE_ICON_SHOW_ADDR - REG_HOLDING_START));
+        object.insert("s_msg_color", DataController.getHoldingBuf(REG_HOLDING_IS_SLAVE_COLOR_CHANGE_ADDR - REG_HOLDING_START));
+
+
+        if (DataController.getHoldingBuf(REG_HOLDING_IS_MASTER_DATA_NEW_ADDR - REG_HOLDING_START) == 1){
+            DataController.setHoldingBuf(REG_HOLDING_IS_MASTER_DATA_NEW_ADDR - REG_HOLDING_START, 0);
+            QByteArray Data;
+            DataController.getMasterMsg(&Data);
+            QString DataAsString = QString(Data);
+            object.insert("s_msg_data", DataAsString);
+        }
+
+        QJsonDocument doc(object);
+        QByteArray bytes = doc.toJson();
+        response.write(bytes, true);
+    }
+
+}
+
+#endif

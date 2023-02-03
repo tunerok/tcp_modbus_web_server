@@ -51,7 +51,7 @@
 
 </div>
 
-  <script type="text/javascript">
+<script type="text/javascript">
 $( document ).ready(function() {
   var s1_inp = document.getElementById("s1_inp_to_send");
   s1_inp.addEventListener("keydown", function (e) {
@@ -125,7 +125,7 @@ function handle_data(obj){
         document.getElementById("s1_icon").hidden = !obj.s1_icon_show_data;
     if (obj.s2_icon_show_data != undefined)
         document.getElementById("s2_icon").hidden = !obj.s2_icon_show_data;
-    if (obj.s1_msg_data != undefined)
+    if (obj.s1_msg_data != undefined && obj.s1_msg_data.length > 0)
         document.getElementById("s1_msg").value += currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds() + ">> " + obj.s1_msg_data + '\r\n';
     if (obj.s2_msg_data != undefined)
         document.getElementById("s2_msg").value += obj.s2_msg_data + '\r\n';
@@ -147,25 +147,7 @@ function loadDoc() {
     xhttp.send();
 }
 
-// function loadDoc() {
-//   const xhttp = new XMLHttpRequest();
-//   xhttp.onload = function() {
-//     document.getElementById("demo").innerHTML =
-//     this.responseText;
-//     }
-//     xhttp.open("GET", "/ajax_info");
-//     xhttp.send();
-// }
 
-
-function change() {
-    var decider = document.getElementById('s1_color');
-    if(decider.checked){
-        loadDoc();
-    } else {
-      loadDoc();
-    }
-}
   </script>
 
 </body>
