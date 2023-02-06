@@ -86,7 +86,7 @@ void WebRequestController::service(HttpRequest &request, HttpResponse &response)
         QJsonDocument doc(object);
         QByteArray bytes = doc.toJson();
         response.write(bytes, true);
-
+    }
 }
 #endif
 

@@ -4,7 +4,6 @@
 #include <QDir>
 #include <QString>
 
-#include <QTimer>
 #include <QObject>
 
 #include "httplistener.h"

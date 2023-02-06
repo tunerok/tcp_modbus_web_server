@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+</head>
+<body>
+
+<div>
+  <h2>Modbus TCP Slave Web Page</h2>
+  <p id="demo"></p>
+  <fieldset >
+    <legend>Slave:</legend>
+    <p>To Master Data input</p>
+    <input id="m_inp_to_send" type="text" size="40">
+    <div>
+      <input type="checkbox" id="m_color" name="m_color" onclick="Set_out_icon()">
+      <label for="m_color">Master show icon</label>
+    </div>
+        <p>From Master Incomming Data<Br>
+    <textarea readonly style="height:150px; width:70%; resize: none; color: green;" id="m_msg" name="m_msg" cols="40" rows="3"></textarea></p>
+    <div style="height:50px">
+      <div id="m_icon" hidden="1">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle id="m_icon" cx="2" cy="2" r="1.5" style="fill:red" />
+        </svg>
+      </div>
+    </div>
+    
+    
+  </fieldset>
+
+
+<script type="text/javascript">
+$( document ).ready(function() {
+  var m_inp = document.getElementById("m_inp_to_send");
+  m_inp.addEventListener("keydown", function (e) {
+      if (e.code === "Enter") {  //checks whether the pressed key is "Enter"
+          Send_inp_data();
+      }
+  });
+});
+
+
+function Send_inp_data(){
+  var obj = new Object();
+  obj.request_type = 1;
+  obj.slave_data = document.getElementById("m_inp_to_send").value;
+  document.getElementById("m_inp_to_send").value = "";
+  Send_post_data(obj);
+}
+
+
+function Set_out_icon(){
+  var obj = new Object();
+  obj.request_type = 2;
+  if (document.getElementById("m_color").checked){
+      obj.slave_data = 1;
+  }
+  else{
+      obj.slave_data = 0;
+  }
+  Send_post_data(obj);
+}
+
+function Send_post_data(data){
+  const xhttp = new XMLHttpRequest();
+  xhttp.open("POST", "/parse_inc_data", false); 
+  xhttp.send(JSON.stringify(data));
+}
+
+
+function handle_data(obj){
+    var currentdate = new Date();
+    if (obj != undefined){
+    if (obj.s_icon_show_data != undefined)
+        document.getElementById("m_icon").hidden = !obj.s_icon_show_data;
+    if (obj.s_msg_color != undefined)
+      if (obj.s_msg_color)
+        document.getElementById("m_msg").style.color = "red";
+      else
+        document.getElementById("m_msg").style.color = "green";
+    if (obj.s_msg_data != undefined)
+        document.getElementById("m_msg").value += currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds() + ">> " + obj.s_msg_data + '\r\n';
+  }
+}
+
+setInterval(loadDoc, 500);
+function loadDoc() {
+  const xhttp = new XMLHttpRequest();
+  xhttp.onload = function() {
+ //   document.getElementById("s2_msg").innerHTML = this.responseText;
+    var obj = JSON.parse(this.responseText);
+    console.log(obj);
+    handle_data(obj);
+
+    }
+    xhttp.open("GET", "/parse_inc_data");
+    xhttp.send();
+}
+
+
+  </script>
+
+</body>
+</html>

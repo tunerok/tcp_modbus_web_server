@@ -9,6 +9,7 @@ ModbusDataController::ModbusDataController()
 #endif
 #ifdef MODBUS_MASTER
     std::memset(this->_localdata, 0, 5);
+    std::memset(this->_data, 0, 5);
 #endif
 
 }
@@ -122,6 +123,7 @@ bool ModbusDataController::putMasterStringData(QByteArray Data, int slave){
     _mutex.lock();
     this->_master_msg_data[slave].append(Data);
     _mutex.unlock();
+    return true;
 }
 
 
@@ -130,18 +132,20 @@ bool ModbusDataController::getMasterStringData(QByteArray *Data, int slave){
     Data->append(this->_master_msg_data[slave]);
     this->_master_msg_data[slave].clear();
     _mutex.unlock();
+    return true;
 }
 
 bool ModbusDataController::bufMasterAvailable(int slave){
     if (this->_master_msg_data[slave].isEmpty())
         return 0;
-    return 1;
+    return true;
 }
 
 bool ModbusDataController::putSlaveStringData(QByteArray Data, int slave){
     _mutex.lock();
     this->_slave_msg_data[slave].append(Data);
     _mutex.unlock();
+    return true;
 }
 
 
@@ -150,6 +154,7 @@ bool ModbusDataController::getSlaveStringData(QByteArray *Data, int slave){
     Data->append(this->_slave_msg_data[slave]);
     this->_slave_msg_data[slave].clear();
     _mutex.unlock();
+    return true;
 }
 
 bool ModbusDataController::bufSlaveAvailable(int slave){

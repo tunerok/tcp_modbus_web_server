@@ -11,7 +11,7 @@ LIBS += -lws2_32
 
 
 #can be defined as MODBUS_MASTER or MODBUS_SLAVE
-DEFINES += MODBUS_SLAVE
+DEFINES += MODBUS_MASTER
 
 include(QtWebApp/QtWebApp/httpserver/httpserver.pri)
 
