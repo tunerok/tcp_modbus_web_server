@@ -6,22 +6,22 @@
 <body>
 
 <div>
-  <h2>html2</h2>
+  <h2>Modbus TCP Slave Web Page</h2>
   <p id="demo"></p>
   <fieldset >
     <legend>Slave:</legend>
     <p>To Master Data input</p>
     <input id="m_inp_to_send" type="text" size="40">
     <div>
-      <input type="checkbox" id="m_color" name="m_color" onclick="Set_out_icon()" checked >
-      <label for="m_color">Master Output color</label>
+      <input type="checkbox" id="m_color" name="m_color" onclick="Set_out_icon()">
+      <label for="m_color">Master show icon</label>
     </div>
         <p>From Master Incomming Data<Br>
-    <textarea readonly style="resize: none; color: red;" id="m_msg" name="m_msg" cols="40" rows="3">ggg</textarea></p>
+    <textarea readonly style="height:150px; width:70%; resize: none; color: green;" id="m_msg" name="m_msg" cols="40" rows="3"></textarea></p>
     <div style="height:50px">
-      <div id="m_icon">
+      <div id="m_icon" hidden="1">
         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <circle id="m_icon" cx="2" cy="2" r="1.5" style="fill:green" />
+          <circle id="m_icon" cx="2" cy="2" r="1.5" style="fill:red" />
         </svg>
       </div>
     </div>
@@ -45,6 +45,7 @@ function Send_inp_data(){
   var obj = new Object();
   obj.request_type = 1;
   obj.slave_data = document.getElementById("m_inp_to_send").value;
+  document.getElementById("m_inp_to_send").value = "";
   Send_post_data(obj);
 }
 

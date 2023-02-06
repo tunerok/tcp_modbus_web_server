@@ -45,8 +45,6 @@ void ModbusDataController::setHoldingBuf(int iRegIndex, unsigned short Data){
 
 void ModbusDataController::getMasterMsg(QByteArray *msg){
     _mutex.lock();
-//    std::string str( (char*)&this->_usRegHoldingBuf[REG_HOLDING_MASTER_DATA_START-REG_HOLDING_START], (REG_STRING_MAX_LEN-10)*2);
-//    QString qstr = QString::fromStdString(str);
     QByteArray tmp = QByteArray(reinterpret_cast<char*>(&this->_usRegHoldingBuf[REG_HOLDING_MASTER_DATA_START-REG_HOLDING_START+1]), REG_STRING_MAX_LEN-10);
     msg->append(tmp);
     _mutex.unlock();
@@ -54,10 +52,9 @@ void ModbusDataController::getMasterMsg(QByteArray *msg){
 
 
 void ModbusDataController::setSlaveMsg(QByteArray msg){
-//    const std::size_t count = msg.size();
+
     _mutex.lock();
     memset(&this->_usRegInputBuf[REG_INPUT_SLAVE_DATA_START-REG_INPUT_START], 0, (REG_STRING_MAX_LEN-1)*2);
-//    unsigned char* hex =new unsigned char[(REG_STRING_MAX_LEN-10)*2];
     std::memcpy((char*)&this->_usRegInputBuf[REG_INPUT_SLAVE_DATA_START-REG_INPUT_START], msg.constData(), msg.length());
     _mutex.unlock();
 }
@@ -132,14 +129,6 @@ bool ModbusDataController::getMasterStringData(QByteArray *Data, int slave){
     _mutex.lock();
     Data->append(this->_master_msg_data[slave]);
     this->_master_msg_data[slave].clear();
-//    if (this->_master_msg_data[slave].length() > REG_STRING_MAX_LEN-10){
-//        std::memcpy(Data, this->_master_msg_data[slave].constData(), REG_STRING_MAX_LEN-10);
-//        this->_master_msg_data[slave].remove(0, REG_STRING_MAX_LEN-10);
-//    }
-//    else {
-//        std::memcpy(Data, this->_master_msg_data[slave].constData(), this->_master_msg_data[slave].length());
-//        this->_master_msg_data[slave].clear();
-//    }
     _mutex.unlock();
 }
 
@@ -160,15 +149,6 @@ bool ModbusDataController::getSlaveStringData(QByteArray *Data, int slave){
     _mutex.lock();
     Data->append(this->_slave_msg_data[slave]);
     this->_slave_msg_data[slave].clear();
-
-//    if (this->_slave_msg_data[slave].length() > REG_STRING_MAX_LEN-10){
-//        std::memcpy(Data, this->_slave_msg_data[slave].constData(), REG_STRING_MAX_LEN-10);
-//        this->_slave_msg_data[slave].remove(0, REG_STRING_MAX_LEN-10);
-//    }
-//    else {
-//        std::memcpy(Data, this->_slave_msg_data[slave].constData(), this->_slave_msg_data[slave].length());
-//        this->_slave_msg_data[slave].clear();
-//    }
     _mutex.unlock();
 }
 

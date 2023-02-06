@@ -3,6 +3,7 @@
 
 #include "httpsessionstore.h"
 #include "staticfilecontroller.h"
+#include "modbustcphandler.h"
 
 using namespace stefanfrings;
 

@@ -23,7 +23,7 @@ PR_END_EXTERN_C
 #define MBM_SERIAL_APIV2_RTU_DYNAMIC_TIMEOUT_MS( ulBaudRate ) vMBPSerialRTUV2Timeout( ulBaudRate )
 
 #define MBP_ADVA_STARTUP_SHUTDOWN_ENABLED  ( 1 )
-#define MBM_DEFAULT_RESPONSE_TIMEOUT       ( 1000 )
+#define MBM_DEFAULT_RESPONSE_TIMEOUT       ( 500 )
 #define MBM_ASCII_ENABLED                  ( 0 )
 #define MBM_RTU_ENABLED                    ( 0 )
 #define MBM_TCP_ENABLED                    ( 1 )

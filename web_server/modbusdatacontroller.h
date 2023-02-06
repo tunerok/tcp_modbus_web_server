@@ -14,12 +14,10 @@
 class ModbusDataController
 {
 #ifdef MODBUS_SLAVE
-    //slave
     unsigned short _usRegInputBuf[REG_INPUT_NREGS];
     unsigned short _usRegHoldingBuf[REG_HOLDING_NREGS];
 #endif
 #ifdef MODBUS_MASTER
-    //master
     QByteArray _master_msg_data[2];
     QByteArray _slave_msg_data[2];
 

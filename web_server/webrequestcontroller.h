@@ -13,8 +13,7 @@ using namespace stefanfrings;
 
 class WebRequestController : public HttpRequestHandler
 {
-    int counter_data;
-    ModbusTCPHandler _sdmodbus;
+
 public:
     WebRequestController(QObject* parent=0);
     void service(HttpRequest& request, HttpResponse& response);

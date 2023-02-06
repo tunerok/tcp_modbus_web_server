@@ -11,7 +11,7 @@ LIBS += -lws2_32
 
 
 #can be defined as MODBUS_MASTER or MODBUS_SLAVE
-DEFINES += MODBUS_MASTER
+DEFINES += MODBUS_SLAVE
 
 include(QtWebApp/QtWebApp/httpserver/httpserver.pri)
 
@@ -30,7 +30,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         global.cpp \
-        listdatacontroller.cpp \
         main.cpp \
         modbusdatacontroller.cpp \
         modbusretargetslave.cpp \
@@ -144,7 +143,6 @@ OTHER_FILES += etc/index/index.html
 
 HEADERS += \
     global.h \
-    listdatacontroller.h \
     modbusdatacontroller.h \
     modbustcpaddresses.h \
     modbustcphandler.h \

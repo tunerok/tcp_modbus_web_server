@@ -71,7 +71,11 @@ void StaticFileController::service(HttpRequest &request, HttpResponse &response)
         // If the filename is a directory, append index.html.
         if (QFileInfo(docroot+path).isDir())
         {
+#ifdef MODBUS_SLAVE
+            path+="/index_slave.html";
+#else
             path+="/index.html";
+#endif
         }
         // Try to open the file
         QFile file(docroot+path);

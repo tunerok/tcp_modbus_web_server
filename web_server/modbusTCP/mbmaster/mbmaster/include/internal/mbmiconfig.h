@@ -93,7 +93,7 @@
 
 /*! \brief Numer of TCP instances supported. */
 #ifndef MBM_TCP_MAX_INSTANCES
-#define MBM_TCP_MAX_INSTANCES ( 1 )
+#define MBM_TCP_MAX_INSTANCES ( 2 )
 #endif
 
 /*! \brief Numer of UDP instances supported. */

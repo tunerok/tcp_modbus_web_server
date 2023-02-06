@@ -6,20 +6,20 @@
 <body>
 
 <div>
-  <h2>html2</h2>
+  <h2>Modbus TCP Master Web Page</h2>
   <p id="demo"></p>
   <fieldset>
     <legend>First Slave:</legend>
     <p>First Slave Data input</p>
     <input id="s1_inp_to_send" type="text" size="40">
     <div>
-      <input type="checkbox" id="s1_color" name="s1_color" onclick="Set_out_color(1)" checked >
+      <input type="checkbox" id="s1_color" name="s1_color" onclick="Set_out_color(1)">
       <label for="s1_color">First Slave Output color</label>
     </div>
     <p>First Slave Incomming Data<Br>
-    <textarea readonly style="height:150px; width:70%; resize: none; color: blue;" id="s1_msg" cols="40" rows="3">sss</textarea></p>
+    <textarea readonly style="height:150px; width:70%; resize: none; color: blue;" id="s1_msg" cols="40" rows="3"></textarea></p>
     <div style="height:50px">
-        <div id="s1_icon">
+        <div id="s1_icon" hidden="1">
           <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
             <circle  cx="2" cy="2" r="1.5" style="fill:green" />
           </svg>
@@ -37,9 +37,9 @@
       <label for="s2_color">Second Slave Output color</label>
     </div>
     <p>Second Slave Incomming Data<Br>
-    <textarea readonly style="height:150px; width:70%; resize: none; color: blue;" id="s2_msg" cols="40" rows="3">eee</textarea></p>
+    <textarea readonly style="height:150px; width:70%; resize: none; color: blue;" id="s2_msg" cols="40" rows="3"></textarea></p>
     <div style="height:50px">
-        <div id="s2_icon">
+        <div id="s2_icon" hidden="1">
           <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
             <circle  cx="2" cy="2" r="1.5" style="fill:yellow" />
           </svg>
@@ -74,8 +74,10 @@ function Send_inp_data(snumber){
   obj.slave_number = snumber;
   if (snumber == 1){
     obj.slave_data = document.getElementById("s1_inp_to_send").value;
+    document.getElementById("s1_inp_to_send").value = "";
   }else{
     obj.slave_data = document.getElementById("s2_inp_to_send").value;
+    document.getElementById("s2_inp_to_send").value = "";
   }
   Send_post_data(obj);
 }
@@ -127,16 +129,15 @@ function handle_data(obj){
         document.getElementById("s2_icon").hidden = !obj.s2_icon_show_data;
     if (obj.s1_msg_data != undefined && obj.s1_msg_data.length > 0)
         document.getElementById("s1_msg").value += currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds() + ">> " + obj.s1_msg_data + '\r\n';
-    if (obj.s2_msg_data != undefined)
-        document.getElementById("s2_msg").value += obj.s2_msg_data + '\r\n';
+    if (obj.s2_msg_data != undefined && obj.s2_msg_data.length > 0)
+        document.getElementById("s2_msg").value += currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds() + ">> " + obj.s2_msg_data + '\r\n';
     }
 }
 
-setInterval(loadDoc, 2000);
+setInterval(loadDoc, 1000);
 function loadDoc() {
   const xhttp = new XMLHttpRequest();
   xhttp.onload = function() {
-    document.getElementById("s2_msg").innerHTML = this.responseText;
 
     var obj = JSON.parse(this.responseText);
     console.log(obj);

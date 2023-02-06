@@ -2,12 +2,14 @@
 
 WebRequestController::WebRequestController(QObject* parent): HttpRequestHandler(parent)
 {
-    counter_data = 0;
-    this->_sdmodbus.start();
+
 }
 #ifdef MODBUS_MASTER
 void WebRequestController::service(HttpRequest &request, HttpResponse &response) {
+
+    //Get instance of DATA controller
     ModbusDataController& DataController = ModbusDataController::getInstance();
+
     if (request.getMethod() == "POST")
     {
         QJsonDocument jsonResponse = QJsonDocument::fromJson(request.getBody());
@@ -19,15 +21,15 @@ void WebRequestController::service(HttpRequest &request, HttpResponse &response)
         switch (request_type) {
         case 1:
         {
-            //send string via modbus
+            //Save string to local storage
             QByteArray data = jsonObject["slave_data"].toString().toUtf8();
+            //Set READY flag
             DataController.putMasterStringData(data, slave_number);
-            //DataController.setLocalDiscrete(REG_HOLDING_IS_MASTER_DATA_NEW_ADDR, slave_number);
             break;
         }
         case 2:{
         {
-            //change color
+            //Change color
             int slave_color = jsonObject["slave_data"].toInt();
             if (slave_color)
                 DataController.setLocalDiscrete(REG_HOLDING_IS_SLAVE_COLOR_CHANGE_ADDR, slave_number);
@@ -38,7 +40,7 @@ void WebRequestController::service(HttpRequest &request, HttpResponse &response)
             }
         }
         case 3:{
-            //btn states
+            //Btn states
             int btn_state = jsonObject["slave_data"].toInt();
             if (btn_state)
                 DataController.setLocalDiscrete(REG_HOLDING_IS_SLAVE_ICON_SHOW_ADDR, slave_number);
@@ -53,11 +55,14 @@ void WebRequestController::service(HttpRequest &request, HttpResponse &response)
         }
     }else if (request.getMethod() == "GET") {
 
+        //JSON data prepare
         QJsonObject object;
 
+        //Show current status of icons
         object.insert("s1_icon_show_data", DataController.checkHostDiscrete(REG_INPUT_IS_MASTER_ICON_SHOW_ADDR, 0));
         object.insert("s2_icon_show_data", DataController.checkHostDiscrete(REG_INPUT_IS_MASTER_ICON_SHOW_ADDR, 1));
 
+        //Read data from buffer and show it
         if (DataController.bufSlaveAvailable(0)){
             QByteArray Data;
             DataController.getSlaveStringData(&Data, 0);
@@ -67,42 +72,21 @@ void WebRequestController::service(HttpRequest &request, HttpResponse &response)
         else {
             object.insert("s1_msg_data", "");
         }
+        if (DataController.bufSlaveAvailable(1)){
+            QByteArray Data;
+            DataController.getSlaveStringData(&Data, 1);
+            QString DataAsString = QString(Data);
+            object.insert("s2_msg_data", DataAsString);
+        }
+        else {
+            object.insert("s2_msg_data", "");
+        }
+
+        //Serialize JSON to QByteArray and send it as answer
         QJsonDocument doc(object);
         QByteArray bytes = doc.toJson();
         response.write(bytes, true);
 
-//        if(DataController.checkHostDiscrete(REG_INPUT_IS_MASTER_ICON_SHOW_ADDR, 0)){
-//            object.insert("icon_show_data_s1", 1);
-//            //response.write("{\"data\":\"1\"}", false);
-//        }else{
-//           // response.write("{\"data\":\"0\"}", false);
-//        }
-//        if (DataController.bufSlaveAvailable(0)){
-//            QByteArray Data;
-//            DataController.getSlaveStringData(&Data, 0);
-//            response.write(Data, true);
-//        }
-
-    }
-//    else{
-//        counter_data += 1;
-//        char tmp[100];
-//  //      response.setHeader("Content-Type", "text/html; charset=UTF-8");
-//   //     response.write("<html><body>");
-//        sprintf(tmp, "Request number: %d", counter_data);
-//        response.write(tmp, true);
-//   //     response.write("</body></header>",true);
-//    }
-
-
-
-
-
-    //QByteArray *data = new QByteArray;
-
-
-
-    //response.write("Hello World",true);
 }
 #endif
 
