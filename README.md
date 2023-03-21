@@ -2,6 +2,8 @@
 
 The project uses the FreeMODBUS library.
 
+An example project on FreeMODBUS-TCP with a master and two slaves. Each of the devices has a web interface for user interaction.
+
 The **web_server** directory contains the source codes and the project for QT
 
 This repository contains compiled projects for windows:
@@ -21,6 +23,8 @@ Video of work (clickable):
 
 
 Проект использует библиотеку FreeMODBUS. 
+
+Пример проекта на FreeMODBUS-TCP с мастером и двумя подчиненными устройтсвами. Каждое из устройств имеет веб-интерфейс для взаимодействия с пользователем. 
 
 В директории **web_server** находятся исходные коды и проект для QT
 
