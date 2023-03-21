@@ -1,5 +1,26 @@
 # tcp_modbus_web_server
 
+The project uses the FreeMODBUS library.
+
+The **web_server** directory contains the source codes and the project for QT
+
+This repository contains compiled projects for windows:
+
+* release_final_master - TCP master
+* release_final_slave_1 - TCP slave 1
+* release_final_slave_2 - TCP slave 2
+
+The etc/webapp1.ini file in projects allows you to configure the launched application, configure ports, ip for slave devices, etc.
+
+***Note: You can't make a slave from a master via a configuration file (the reverse is also true)***
+
+Video of work (clickable):
+
+
+---
+
+
+Проект использует библиотеку FreeMODBUS. 
 
 В директории **web_server** находятся исходные коды и проект для QT
 
