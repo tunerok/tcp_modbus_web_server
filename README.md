@@ -1,5 +1,7 @@
 # tcp_modbus_web_server
 
+Application for messaging and events over Modbus TCP.
+
 The project uses the FreeMODBUS library.
 
 An example project on FreeMODBUS-TCP with a master and two slaves. Each of the devices has a web interface for user interaction.
@@ -21,6 +23,7 @@ Video of work (clickable):
 
 ---
 
+Приложение для обмена сообщениями и событиями поверх Modbus TCP.
 
 Проект использует библиотеку FreeMODBUS. 
 
