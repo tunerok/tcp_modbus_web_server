@@ -3,14 +3,6 @@
 
 ListDataController::ListDataController(QObject* parent)
     : HttpRequestHandler(parent) {
-    list.append("Robert");
-    list.append("Lisa");
-    list.append("Hannah");
-    list.append("Ludwig");
-    list.append("Miranda");
-    list.append("Francesco");
-    list.append("Kim");
-    list.append("Jacko");
 }
 
 void ListDataController::service(HttpRequest &request, HttpResponse &response) {
